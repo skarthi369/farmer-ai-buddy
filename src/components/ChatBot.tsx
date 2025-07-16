@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Send, User, Bot, Loader2, Image as ImageIcon, Mic, MicOff, Volume2, VolumeX, MapPin } from "lucide-react";
+import { Send, User, Bot, Loader2, Image as ImageIcon, Mic, MicOff, Volume2, VolumeX, MapPin, Sparkles } from "lucide-react";
+import { RippleEffect, LoadingSpinner, AnimatedNumber } from "@/components/AnimatedComponents";
 import { useToast } from "@/hooks/use-toast";
 import { useVoiceAssistant, SUPPORTED_LANGUAGES } from "@/hooks/useVoiceAssistant";
 import { useLocation } from "@/hooks/useLocation";
@@ -182,16 +183,19 @@ export const ChatBot = () => {
   };
 
   return (
-    <Card className="flex flex-col h-[700px] bg-card border-border shadow-card">
+    <Card className="flex flex-col h-[700px] bg-card border-border shadow-card glass-effect">
       {/* Header with language and location controls */}
-      <div className="p-4 border-b border-border bg-gradient-subtle">
+      <div className="p-4 border-b border-border bg-gradient-subtle animate-slide-up">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-              <Bot className="h-5 w-5 text-primary-foreground" />
+            <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center animate-pulse-glow">
+              <Bot className="h-5 w-5 text-primary-foreground animate-float" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">AI Farm Assistant</h3>
+              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                AI Farm Assistant
+                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+              </h3>
               <p className="text-sm text-muted-foreground">
                 {location?.city}, {location?.state} • {district?.season}
               </p>
@@ -239,61 +243,68 @@ export const ChatBot = () => {
           {/* Voice Controls */}
           {isSupported && (
             <div className="flex gap-1">
-              <Button
-                variant={isListening ? "default" : "outline"}
-                size="sm"
-                onClick={handleVoiceToggle}
-                className="h-8 px-2"
-              >
-                {isListening ? <MicOff className="h-3 w-3" /> : <Mic className="h-3 w-3" />}
-              </Button>
-              <Button
-                variant={isSpeaking ? "default" : "outline"}
-                size="sm"
-                onClick={handleSpeakToggle}
-                className="h-8 px-2"
-              >
-                {isSpeaking ? <VolumeX className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />}
-              </Button>
+              <RippleEffect>
+                <Button
+                  variant={isListening ? "default" : "outline"}
+                  size="sm"
+                  onClick={handleVoiceToggle}
+                  className={`h-8 px-2 transition-all duration-300 ${isListening ? 'animate-pulse-glow' : 'hover-glow'}`}
+                >
+                  {isListening ? <MicOff className="h-3 w-3 animate-pulse" /> : <Mic className="h-3 w-3" />}
+                </Button>
+              </RippleEffect>
+              <RippleEffect>
+                <Button
+                  variant={isSpeaking ? "default" : "outline"}
+                  size="sm"
+                  onClick={handleSpeakToggle}
+                  className={`h-8 px-2 transition-all duration-300 ${isSpeaking ? 'animate-pulse-glow' : 'hover-glow'}`}
+                >
+                  {isSpeaking ? <VolumeX className="h-3 w-3 animate-pulse" /> : <Volume2 className="h-3 w-3" />}
+                </Button>
+              </RippleEffect>
             </div>
           )}
         </div>
 
         {/* Current Weather Strip */}
         {weatherData && (
-          <div className="mt-3 flex items-center gap-4 p-2 bg-muted/30 rounded-lg text-xs">
-            <span className="text-primary font-medium">{weatherData.current.temperature}°C</span>
+          <div className="mt-3 flex items-center gap-4 p-2 bg-muted/30 rounded-lg text-xs glass-effect animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <span className="text-primary font-medium">
+              <AnimatedNumber value={weatherData.current.temperature} suffix="°C" />
+            </span>
             <span>{weatherData.current.condition}</span>
-            <span>💧 {weatherData.current.humidity}%</span>
-            <span>🌪️ {weatherData.current.windSpeed} km/h</span>
+            <span>💧 <AnimatedNumber value={weatherData.current.humidity} suffix="%" /></span>
+            <span>🌪️ <AnimatedNumber value={weatherData.current.windSpeed} suffix=" km/h" /></span>
           </div>
         )}
       </div>
 
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
         <div className="space-y-4">
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
               key={message.id}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className={`flex max-w-[85%] ${message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                 <Avatar className="w-8 h-8 mx-2">
-                  <AvatarFallback className={message.role === 'user' ? 'bg-secondary' : 'bg-primary'}>
-                    {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4 text-primary-foreground" />}
+                  <AvatarFallback className={`${message.role === 'user' ? 'bg-secondary' : 'bg-primary animate-pulse-glow'}`}>
+                    {message.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4 text-primary-foreground animate-float" />}
                   </AvatarFallback>
                 </Avatar>
                 
-                <div className={`rounded-lg px-4 py-2 ${
+                <div className={`rounded-lg px-4 py-2 glass-effect transition-all duration-300 hover:scale-105 ${
                   message.role === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted text-muted-foreground'
+                    ? 'bg-primary text-primary-foreground hover:shadow-glow' 
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}>
                   {message.image && (
                     <img 
                       src={message.image} 
                       alt="Uploaded" 
-                      className="w-full max-w-xs rounded-lg mb-2"
+                      className="w-full max-w-xs rounded-lg mb-2 animate-bounce-in"
                     />
                   )}
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -306,10 +317,10 @@ export const ChatBot = () => {
           ))}
           
           {isLoading && (
-            <div className="flex justify-start">
-              <div className="flex items-center space-x-2 bg-muted rounded-lg px-4 py-2">
-                <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                <span className="text-sm text-muted-foreground">AI is thinking...</span>
+            <div className="flex justify-start animate-slide-up">
+              <div className="flex items-center space-x-2 bg-muted rounded-lg px-4 py-2 glass-effect">
+                <LoadingSpinner size="sm" className="text-primary" />
+                <span className="text-sm text-muted-foreground animate-pulse">AI is thinking...</span>
               </div>
             </div>
           )}
@@ -337,10 +348,10 @@ export const ChatBot = () => {
 
         {/* Voice feedback */}
         {isListening && (
-          <div className="mb-3 flex items-center gap-2 p-2 bg-primary/10 rounded-lg text-xs">
+          <div className="mb-3 flex items-center gap-2 p-2 bg-primary/10 rounded-lg text-xs glass-effect animate-pulse-glow">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            <span className="text-primary">Listening... speak now</span>
-            {transcript && <span className="text-muted-foreground">"{transcript}"</span>}
+            <span className="text-primary animate-pulse">Listening... speak now</span>
+            {transcript && <span className="text-muted-foreground animate-slide-up">"{transcript}"</span>}
           </div>
         )}
         
@@ -353,32 +364,37 @@ export const ChatBot = () => {
             className="hidden"
           />
           
-          <Button
-            variant="soft"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            className="px-3"
-          >
-            <ImageIcon className="h-4 w-4" />
-          </Button>
+          <RippleEffect>
+            <Button
+              variant="soft"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-3 hover-glow transition-all duration-300"
+            >
+              <ImageIcon className="h-4 w-4 animate-float" />
+            </Button>
+          </RippleEffect>
           
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={`Ask in ${selectedLanguage.nativeName}...`}
-            className="flex-1"
+            className="flex-1 glass-effect transition-all duration-300 focus:shadow-glow"
             disabled={isLoading || isListening}
           />
           
-          <Button 
-            onClick={sendMessage}
-            disabled={isLoading || (!input.trim() && !selectedImage)}
-            variant="default"
-            size="sm"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+          <RippleEffect>
+            <Button 
+              onClick={sendMessage}
+              disabled={isLoading || (!input.trim() && !selectedImage)}
+              variant="default"
+              size="sm"
+              className="hover-glow transition-all duration-300"
+            >
+              <Send className="h-4 w-4 animate-float" style={{ animationDelay: '1s' }} />
+            </Button>
+          </RippleEffect>
         </div>
       </div>
     </Card>

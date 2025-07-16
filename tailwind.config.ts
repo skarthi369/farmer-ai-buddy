@@ -100,11 +100,50 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+					'50%': { transform: 'translateY(-20px) rotate(180deg)' }
+				},
+				'bounce-in': {
+					'0%': { transform: 'scale(0.3) rotate(-10deg)', opacity: '0' },
+					'50%': { transform: 'scale(1.05) rotate(5deg)' },
+					'70%': { transform: 'scale(0.9) rotate(-2deg)' },
+					'100%': { transform: 'scale(1) rotate(0deg)', opacity: '1' }
+				},
+				'pulse-glow': {
+					'0%, 100%': { boxShadow: '0 0 5px var(--primary), 0 0 10px var(--primary)' },
+					'50%': { boxShadow: '0 0 10px var(--primary), 0 0 20px var(--primary), 0 0 30px var(--primary)' }
+				},
+				'slide-up': {
+					'from': { opacity: '0', transform: 'translateY(30px)' },
+					'to': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'shimmer': {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' }
+				},
+				'particle-float': {
+					'0%': { transform: 'translateY(0px) translateX(0px) rotate(0deg)', opacity: '0.7' },
+					'33%': { transform: 'translateY(-30px) translateX(20px) rotate(120deg)', opacity: '1' },
+					'66%': { transform: 'translateY(-10px) translateX(-15px) rotate(240deg)', opacity: '0.8' },
+					'100%': { transform: 'translateY(0px) translateX(0px) rotate(360deg)', opacity: '0.7' }
+				},
+				'ripple': {
+					'0%': { transform: 'scale(0)', opacity: '1' },
+					'100%': { transform: 'scale(4)', opacity: '0' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'bounce-in': 'bounce-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'pulse-glow': 'pulse-glow 2s infinite',
+				'slide-up': 'slide-up 0.6s ease-out',
+				'shimmer': 'shimmer 2s infinite',
+				'particle-float': 'particle-float 8s linear infinite',
+				'ripple': 'ripple 0.6s linear'
 			}
 		}
 	},
