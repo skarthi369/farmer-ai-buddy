@@ -5,6 +5,7 @@ import { ChatBot } from "@/components/ChatBot";
 import { WeatherDashboard } from "@/components/WeatherDashboard";
 import { MarketInsights } from "@/components/MarketInsights";
 import { PlantIdentification } from "@/components/PlantIdentification";
+import { LocationSeasonCard } from "@/components/LocationSeasonCard";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
@@ -16,16 +17,18 @@ const Index = () => {
       case "chat":
         return (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
               <h2 className="text-3xl font-bold text-foreground mb-2">AI Farm Assistant</h2>
-              <p className="text-muted-foreground">Get instant answers to your farming questions</p>
+              <p className="text-muted-foreground">Voice-enabled multilingual farming support</p>
             </div>
+            <LocationSeasonCard />
             <ChatBot />
           </div>
         );
       case "weather":
         return (
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <LocationSeasonCard />
             <WeatherDashboard />
           </div>
         );
